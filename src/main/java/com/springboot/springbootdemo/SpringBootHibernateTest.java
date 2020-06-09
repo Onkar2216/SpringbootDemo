@@ -14,6 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +22,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.hibernate.Country;
 import com.springboot.hibernate.Employee;
 
 @RestController
+@CrossOrigin
 @RequestMapping("apii")
 public class SpringBootHibernateTest {
 
@@ -41,6 +44,7 @@ public class SpringBootHibernateTest {
 		Session session = sf.openSession();
 		Criteria criteria = session.createCriteria(Employee.class);
 		List<Employee> employeelist = criteria.list();
+		System.out.println(employeelist);
 		return new ResponseEntity<List<Employee>>(employeelist, HttpStatus.OK);
 	}
 
@@ -80,6 +84,7 @@ public class SpringBootHibernateTest {
 		Criteria criteria = session.createCriteria(Employee.class);
 		criteria.add(Restrictions.eq("name", name));
 		List<Employee> employeelist = criteria.list();
+		System.out.println(employeelist);
 		return new ResponseEntity<List<Employee>>(employeelist, HttpStatus.OK);
 	}
 
@@ -92,14 +97,11 @@ public class SpringBootHibernateTest {
 		Date dateobj = new Date();
 		String date=df.format(dateobj);
 		System.out.println("fdte >> " + date);
-		Date dt = df.parse(date);
-		// Date fdate = df.format(dt);
-		System.out.println("date >> " + dt);
 		Session session = sf.openSession();
 		Criteria criteria = session.createCriteria(Employee.class);
-		criteria.add(Restrictions.eq("createddtm", dt));
+		criteria.add(Restrictions.le("createddtm", date));
 		List<Employee> employeelist = criteria.list();
-
+		System.out.println(employeelist);
 		return new ResponseEntity<List<Employee>>(employeelist, HttpStatus.OK);
 	}
 
@@ -151,14 +153,14 @@ public class SpringBootHibernateTest {
 	 //delete Country by country name"Rest API 8"
 	  
 	 @SuppressWarnings("unchecked")
-	@DeleteMapping(value = "/deletecountry/{countryname}") 
-	 public ResponseEntity<String> deletecountry(@PathVariable("countryname") String countryname) 
+	@DeleteMapping(value = "deletecountry") 
+	 public ResponseEntity<String> deletecountry(@RequestBody employee1 employee) 
 	 { 
 		 System.out.println("I am In Delete Country.......");
-		 System.out.println(countryname); 
+		 System.out.println(employee.getCountryname()); 
 		 Session session = sf.openSession();
 		 Criteria criteria = session.createCriteria(Country.class);
-		 criteria.add(Restrictions.eq("countryname", countryname));
+		 criteria.add(Restrictions.eq("countryname", employee.getCountryname()));
 		 List<Country> countrylist = criteria.list();
 		 for(Country country:countrylist)
 		 {
@@ -189,5 +191,18 @@ public class SpringBootHibernateTest {
 		 }
 		 return new ResponseEntity<String>("Employee deleted Successfully",HttpStatus.OK); 
 	  }
-	 
+	// Show All Employee "Rest API 1"
+		@SuppressWarnings("unchecked")
+		@GetMapping("/setEmployee/{emp}")
+		public List<Employee> setemployeelist(@PathVariable("emp") int emp) 
+		{
+			System.out.println("I am In Set Employee List..... >> "+emp);
+			Session session = sf.openSession();
+			Criteria criteria = session.createCriteria(Employee.class);
+			criteria.add(Restrictions.eq("id", emp));
+			List<Employee> employeelist = criteria.list();
+			System.out.println(employeelist);
+			return employeelist;
+		}
+ 
 }

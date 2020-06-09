@@ -14,6 +14,21 @@ public class employee1
 	private int cid;
 	private String countryname;
 	
+	public employee1(String name, String phoneno, String department, String status, String createddtm,
+			String createdby, String updateddtm, String updatedby, int cid, String countryname) {
+		super();
+		this.name = name;
+		this.phoneno = phoneno;
+		this.department = department;
+		this.status = status;
+		this.createddtm = createddtm;
+		this.createdby = createdby;
+		this.updateddtm = updateddtm;
+		this.updatedby = updatedby;
+		this.cid = cid;
+		this.countryname = countryname;
+	}
+	
 	public employee1(int id, String name, String phoneno, String department, String status, String createddtm,
 			String createdby, String updateddtm, String updatedby, int cid, String countryname) {
 		super();
